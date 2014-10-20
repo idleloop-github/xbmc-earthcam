@@ -25,7 +25,7 @@ CACHE_NUNCA = "2"   # No cachear nada
 CACHE_PATH = config.get_setting("cache.dir")
 logger.info("[scrapertools.py] CACHE_PATH="+CACHE_PATH)
 
-DEBUG = False
+DEBUG = config.get_setting("debug")
 
 def cache_page(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']],modo_cache=CACHE_ACTIVA, timeout=socket.getdefaulttimeout()):
     return cachePage(url,post,headers,modo_cache,timeout=timeout)
@@ -33,16 +33,16 @@ def cache_page(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U;
 # TODO: (3.1) Quitar el parámetro modoCache (ahora se hace por configuración)
 # TODO: (3.2) Usar notación minusculas_con_underscores para funciones y variables como recomienda Python http://www.python.org/dev/peps/pep-0008/
 def cachePage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']],modoCache=CACHE_ACTIVA, timeout=socket.getdefaulttimeout()):
-    logger.info("[scrapertools.py] cachePage url="+url)
+    if (DEBUG==True): logger.info("[scrapertools.py] cachePage url="+url)
     modoCache = config.get_setting("cache.mode")
 
     '''
     if config.get_platform()=="plex":
         from PMS import HTTP
         try:
-            logger.info("url="+url)
+            if (DEBUG==True): logger.info("url="+url)
             data = HTTP.Request(url)
-            logger.info("descargada")
+            if (DEBUG==True): logger.info("descargada")
         except:
             data = ""
             logger.error("Error descargando "+url)
@@ -55,7 +55,7 @@ def cachePage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; 
     # CACHE_NUNCA: Siempre va a la URL a descargar
     # obligatorio para peticiones POST
     if modoCache == CACHE_NUNCA or post is not None:
-        logger.info("[scrapertools.py] MODO_CACHE=2 (no cachear)")
+        if (DEBUG==True): logger.info("[scrapertools.py] MODO_CACHE=2 (no cachear)")
         
         try:
             data = downloadpage(url,post,headers, timeout=timeout)
@@ -64,7 +64,7 @@ def cachePage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; 
     
     # CACHE_SIEMPRE: Siempre descarga de cache, sin comprobar fechas, excepto cuando no está
     elif modoCache == CACHE_SIEMPRE:
-        logger.info("[scrapertools.py] MODO_CACHE=1 (cachear todo)")
+        if (DEBUG==True): logger.info("[scrapertools.py] MODO_CACHE=1 (cachear todo)")
         
         # Obtiene los handlers del fichero en la cache
         cachedFile, newFile = getCacheFileNames(url)
@@ -81,16 +81,16 @@ def cachePage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; 
             outfile.write(data)
             outfile.flush()
             outfile.close()
-            logger.info("[scrapertools.py] Grabado a " + newFile)
+            if (DEBUG==True): logger.info("[scrapertools.py] Grabado a " + newFile)
         else:
-            logger.info("[scrapertools.py] Leyendo de cache " + cachedFile)
+            if (DEBUG==True): logger.info("[scrapertools.py] Leyendo de cache " + cachedFile)
             infile = open( cachedFile )
             data = infile.read()
             infile.close()
     
     # CACHE_ACTIVA: Descarga de la cache si no ha cambiado
     else:
-        logger.info("[scrapertools.py] MODO_CACHE=0 (automática)")
+        if (DEBUG==True): logger.info("[scrapertools.py] MODO_CACHE=0 (automática)")
         
         # Datos descargados
         data = ""
@@ -110,15 +110,15 @@ def cachePage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; 
             outfile.write(data)
             outfile.flush()
             outfile.close()
-            logger.info("[scrapertools.py] Grabado a " + newFile)
+            if (DEBUG==True): logger.info("[scrapertools.py] Grabado a " + newFile)
     
         # Si sólo hay uno comprueba el timestamp (hace una petición if-modified-since)
         else:
             # Extrae el timestamp antiguo del nombre del fichero
             oldtimestamp = time.mktime( time.strptime(cachedFile[-20:-6], "%Y%m%d%H%M%S") )
     
-            logger.info("[scrapertools.py] oldtimestamp="+cachedFile[-20:-6])
-            logger.info("[scrapertools.py] oldtimestamp="+time.ctime(oldtimestamp))
+            if (DEBUG==True): logger.info("[scrapertools.py] oldtimestamp="+cachedFile[-20:-6])
+            if (DEBUG==True): logger.info("[scrapertools.py] oldtimestamp="+time.ctime(oldtimestamp))
             
             # Hace la petición
             updated,data = downloadtools.downloadIfNotModifiedSince(url,oldtimestamp)
@@ -134,10 +134,10 @@ def cachePage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; 
                 outfile.write(data)
                 outfile.flush()
                 outfile.close()
-                logger.info("[scrapertools.py] Grabado a " + newFile)
+                if (DEBUG==True): logger.info("[scrapertools.py] Grabado a " + newFile)
             # Devuelve el contenido del fichero de la cache
             else:
-                logger.info("[scrapertools.py] Leyendo de cache " + cachedFile)
+                if (DEBUG==True): logger.info("[scrapertools.py] Leyendo de cache " + cachedFile)
                 infile = open( cachedFile )
                 data = infile.read()
                 infile.close()
@@ -227,11 +227,11 @@ def getSiteCachePath(url):
 
 def cachePage2(url,headers):
 
-    logger.info("Descargando " + url)
+    if (DEBUG==True): logger.info("Descargando " + url)
     inicio = time.clock()
     req = urllib2.Request(url)
     for header in headers:
-        logger.info(header[0]+":"+header[1])
+        if (DEBUG==True): logger.info(header[0]+":"+header[1])
         req.add_header(header[0], header[1])
 
     try:
@@ -239,26 +239,26 @@ def cachePage2(url,headers):
     except:
         req = urllib2.Request(url.replace(" ","%20"))
         for header in headers:
-            logger.info(header[0]+":"+header[1])
+            if (DEBUG==True): logger.info(header[0]+":"+header[1])
             req.add_header(header[0], header[1])
         response = urllib2.urlopen(req)
     data=response.read()
     response.close()
     fin = time.clock()
-    logger.info("Descargado en %d segundos " % (fin-inicio+1))
+    if (DEBUG==True): logger.info("Descargado en %d segundos " % (fin-inicio+1))
 
     '''
         outfile = open(localFileName,"w")
         outfile.write(data)
         outfile.flush()
         outfile.close()
-        logger.info("Grabado a " + localFileName)
+        if (DEBUG==True): logger.info("Grabado a " + localFileName)
     '''
     return data
 
 def cachePagePost(url,post):
 
-    logger.info("Descargando " + url)
+    if (DEBUG==True): logger.info("Descargando " + url)
     inicio = time.clock()
     req = urllib2.Request(url,post)
     req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3')
@@ -272,14 +272,14 @@ def cachePagePost(url,post):
     data=response.read()
     response.close()
     fin = time.clock()
-    logger.info("Descargado en %d segundos " % (fin-inicio+1))
+    if (DEBUG==True): logger.info("Descargado en %d segundos " % (fin-inicio+1))
 
     '''
         outfile = open(localFileName,"w")
         outfile.write(data)
         outfile.flush()
         outfile.close()
-        logger.info("Grabado a " + localFileName)
+        if (DEBUG==True): logger.info("Grabado a " + localFileName)
     '''
     return data
 
@@ -295,13 +295,13 @@ class NoRedirectHandler(urllib2.HTTPRedirectHandler):
     http_error_307 = http_error_302
 
 def downloadpage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']],follow_redirects=True, timeout=socket.getdefaulttimeout()):
-    logger.info("[scrapertools.py] downloadpage")
-    logger.info("[scrapertools.py] url="+url)
+    if (DEBUG==True): logger.info("[scrapertools.py] downloadpage")
+    if (DEBUG==True): logger.info("[scrapertools.py] url="+url)
     
     if post is not None:
-        logger.info("[scrapertools.py] post="+post)
+        if (DEBUG==True): logger.info("[scrapertools.py] post="+post)
     else:
-        logger.info("[scrapertools.py] post=None")
+        if (DEBUG==True): logger.info("[scrapertools.py] post=None")
     
     # ---------------------------------
     # Instala las cookies
@@ -309,7 +309,7 @@ def downloadpage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; 
 
     #  Inicializa la librería de las cookies
     ficherocookies = os.path.join( config.get_setting("cookies.dir"), 'cookies.dat' )
-    logger.info("[scrapertools.py] ficherocookies="+ficherocookies)
+    if (DEBUG==True): logger.info("[scrapertools.py] ficherocookies="+ficherocookies)
 
     cj = None
     ClientCookie = None
@@ -317,29 +317,29 @@ def downloadpage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; 
 
     # Let's see if cookielib is available
     try:
-        logger.info("[scrapertools.py] Importando cookielib")
+        if (DEBUG==True): logger.info("[scrapertools.py] Importando cookielib")
         import cookielib
     except ImportError:
-        logger.info("[scrapertools.py] cookielib no disponible")
+        if (DEBUG==True): logger.info("[scrapertools.py] cookielib no disponible")
         # If importing cookielib fails
         # let's try ClientCookie
         try:
-            logger.info("[scrapertools.py] Importando ClientCookie")
+            if (DEBUG==True): logger.info("[scrapertools.py] Importando ClientCookie")
             import ClientCookie
         except ImportError:
-            logger.info("[scrapertools.py] ClientCookie no disponible")
+            if (DEBUG==True): logger.info("[scrapertools.py] ClientCookie no disponible")
             # ClientCookie isn't available either
             urlopen = urllib2.urlopen
             Request = urllib2.Request
         else:
-            logger.info("[scrapertools.py] ClientCookie disponible")
+            if (DEBUG==True): logger.info("[scrapertools.py] ClientCookie disponible")
             # imported ClientCookie
             urlopen = ClientCookie.urlopen
             Request = ClientCookie.Request
             cj = ClientCookie.MozillaCookieJar()
 
     else:
-        logger.info("[scrapertools.py] cookielib disponible")
+        if (DEBUG==True): logger.info("[scrapertools.py] cookielib disponible")
         # importing cookielib worked
         urlopen = urllib2.urlopen
         Request = urllib2.Request
@@ -350,23 +350,23 @@ def downloadpage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; 
     if cj is not None:
     # we successfully imported
     # one of the two cookie handling modules
-        logger.info("[scrapertools.py] Hay cookies")
+        if (DEBUG==True): logger.info("[scrapertools.py] Hay cookies")
 
         if os.path.isfile(ficherocookies):
-            logger.info("[scrapertools.py] Leyendo fichero cookies")
+            if (DEBUG==True): logger.info("[scrapertools.py] Leyendo fichero cookies")
             # if we have a cookie file already saved
             # then load the cookies into the Cookie Jar
             try:
                 cj.load(ficherocookies)
             except:
-                logger.info("[scrapertools.py] El fichero de cookies existe pero es ilegible, se borra")
+                if (DEBUG==True): logger.info("[scrapertools.py] El fichero de cookies existe pero es ilegible, se borra")
                 os.remove(ficherocookies)
 
         # Now we need to get our Cookie Jar
         # installed in the opener;
         # for fetching URLs
         if cookielib is not None:
-            logger.info("[scrapertools.py] opener usando urllib2 (cookielib)")
+            if (DEBUG==True): logger.info("[scrapertools.py] opener usando urllib2 (cookielib)")
             # if we use cookielib
             # then we get the HTTPCookieProcessor
             # and install the opener in urllib2
@@ -377,7 +377,7 @@ def downloadpage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; 
             urllib2.install_opener(opener)
 
         else:
-            logger.info("[scrapertools.py] opener usando ClientCookie")
+            if (DEBUG==True): logger.info("[scrapertools.py] opener usando ClientCookie")
             # if we use ClientCookie
             # then we get the HTTPCookieProcessor
             # and install the opener in ClientCookie
@@ -396,16 +396,16 @@ def downloadpage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; 
 
     # Construye el request
     if post is None:
-        logger.info("[scrapertools.py] petición GET")
+        if (DEBUG==True): logger.info("[scrapertools.py] petición GET")
     else:
-        logger.info("[scrapertools.py] petición POST")
+        if (DEBUG==True): logger.info("[scrapertools.py] petición POST")
     
     # Añade las cabeceras
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
     for header in headers:
-        logger.info("[scrapertools.py] header %s=%s" % (str(header[0]),str(header[1])) )
+        if (DEBUG==True): logger.info("[scrapertools.py] header %s=%s" % (str(header[0]),str(header[1])) )
         txheaders[header[0]]=header[1]
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
 
     req = Request(url, post, txheaders)
     if timeout is None:
@@ -430,12 +430,12 @@ def downloadpage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; 
     # Lee los datos y cierra
     data=handle.read()
     info = handle.info()
-    logger.info("[scrapertools.py] Respuesta")
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] Respuesta")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
     for header in info:
-        logger.info("[scrapertools.py] "+header+"="+info[header])
+        if (DEBUG==True): logger.info("[scrapertools.py] "+header+"="+info[header])
     handle.close()
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
 
     '''
     # Lanza la petición
@@ -454,7 +454,7 @@ def downloadpage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; 
     
     # Tiempo transcurrido
     fin = time.clock()
-    logger.info("[scrapertools.py] Descargado en %d segundos " % (fin-inicio+1))
+    if (DEBUG==True): logger.info("[scrapertools.py] Descargado en %d segundos " % (fin-inicio+1))
 
     return data
 
@@ -465,7 +465,7 @@ def downloadpagewithcookies(url):
 
     #  Inicializa la librería de las cookies
     ficherocookies = os.path.join( config.get_data_path(), 'cookies.dat' )
-    logger.info("[scrapertools.py] Cookiefile="+ficherocookies)
+    if (DEBUG==True): logger.info("[scrapertools.py] Cookiefile="+ficherocookies)
 
     cj = None
     ClientCookie = None
@@ -507,7 +507,7 @@ def downloadpagewithcookies(url):
             try:
                 cj.load(ficherocookies)
             except:
-                logger.info("[scrapertools.py] El fichero de cookies existe pero es ilegible, se borra")
+                if (DEBUG==True): logger.info("[scrapertools.py] El fichero de cookies existe pero es ilegible, se borra")
                 os.remove(ficherocookies)
 
         # Now we need to get our Cookie Jar
@@ -555,7 +555,7 @@ def downloadpagewithcookies(url):
     return data
     
 def downloadpageWithoutCookies(url):
-    logger.info("[scrapertools.py] Descargando " + url)
+    if (DEBUG==True): logger.info("[scrapertools.py] Descargando " + url)
     inicio = time.clock()
     req = urllib2.Request(url)
     req.add_header('User-Agent', 'Mozilla/5.0 (Windows; U; Windows NT 6.0; es-ES; rv:1.9.0.14) Gecko/2009082707 Firefox/3.0.14')
@@ -570,7 +570,7 @@ def downloadpageWithoutCookies(url):
     data=response.read()
     response.close()
     fin = time.clock()
-    logger.info("[scrapertools.py] Descargado en %d segundos " % (fin-inicio+1))
+    if (DEBUG==True): logger.info("[scrapertools.py] Descargado en %d segundos " % (fin-inicio+1))
     return data
     
 
@@ -578,7 +578,7 @@ def downloadpageGzip(url):
     
     #  Inicializa la librería de las cookies
     ficherocookies = os.path.join( config.get_data_path(), 'cookies.dat' )
-    logger.info("Cookiefile="+ficherocookies)
+    if (DEBUG==True): logger.info("Cookiefile="+ficherocookies)
     inicio = time.clock()
     
     cj = None
@@ -625,7 +625,7 @@ def downloadpageGzip(url):
             try:
                 cj.load(ficherocookies)
             except:
-                logger.info("[scrapertools.py] El fichero de cookies existe pero es ilegible, se borra")
+                if (DEBUG==True): logger.info("[scrapertools.py] El fichero de cookies existe pero es ilegible, se borra")
                 os.remove(ficherocookies)
 
         # Now we need to get our Cookie Jar
@@ -655,7 +655,7 @@ def downloadpageGzip(url):
     
     import httplib
     parsedurl = urlparse.urlparse(url)
-    logger.info("parsedurl="+str(parsedurl))
+    if (DEBUG==True): logger.info("parsedurl="+str(parsedurl))
         
     txheaders =  {
     'User-Agent':'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-GB; rv:1.9.0.3) Gecko/2008092417 Firefox/3.0.3',
@@ -666,7 +666,7 @@ def downloadpageGzip(url):
     'Keep-Alive':'300',
     'Connection':'keep-alive',
     'Referer':parsedurl[0]+"://"+parsedurl[1]}
-    logger.info(str(txheaders))
+    if (DEBUG==True): logger.info(str(txheaders))
 
     # fake a user agent, some websites (like google) don't like automated exploration
 
@@ -678,7 +678,7 @@ def downloadpageGzip(url):
     handle.close()
     
     fin = time.clock()
-    logger.info("[scrapertools.py] Descargado 'Gzipped data' en %d segundos " % (fin-inicio+1))
+    if (DEBUG==True): logger.info("[scrapertools.py] Descargado 'Gzipped data' en %d segundos " % (fin-inicio+1))
         
     # Descomprime el archivo de datos Gzip
     try:
@@ -690,7 +690,7 @@ def downloadpageGzip(url):
         data1 = gzipper.read()
         gzipper.close()
         fin = time.clock()
-        logger.info("[scrapertools.py] 'Gzipped data' descomprimido en %d segundos " % (fin-inicio+1))
+        if (DEBUG==True): logger.info("[scrapertools.py] 'Gzipped data' descomprimido en %d segundos " % (fin-inicio+1))
         return data1
     except:
         return data
@@ -698,7 +698,7 @@ def downloadpageGzip(url):
 def printMatches(matches):
     i = 0
     for match in matches:
-        logger.info("[scrapertools.py] %d %s" % (i , match))
+        if (DEBUG==True): logger.info("[scrapertools.py] %d %s" % (i , match))
         i = i + 1
         
 def get_match(data,patron,index=0):
@@ -726,7 +726,7 @@ def unescape(text):
                     return unichr(int(text[2:-1])).encode("utf-8")
                   
             except ValueError:
-                logger.info("error de valor")
+                if (DEBUG==True): logger.info("error de valor")
                 pass
         else:
             # named entity
@@ -745,7 +745,7 @@ def unescape(text):
                 import htmlentitydefs
                 text = unichr(htmlentitydefs.name2codepoint[text[1:-1]]).encode("utf-8")
             except KeyError:
-                logger.info("keyerror")
+                if (DEBUG==True): logger.info("keyerror")
                 pass
             except:
                 pass
@@ -976,16 +976,16 @@ def getLocationHeaderFromResponse(url):
 
 def get_header_from_response(url,header_to_get="",post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']]):
     header_to_get = header_to_get.lower()
-    logger.info("[scrapertools.py] get_header_from_response url="+url+", header_to_get="+header_to_get)
+    if (DEBUG==True): logger.info("[scrapertools.py] get_header_from_response url="+url+", header_to_get="+header_to_get)
 
     if post is not None:
-        logger.info("[scrapertools.py] post="+post)
+        if (DEBUG==True): logger.info("[scrapertools.py] post="+post)
     else:
-        logger.info("[scrapertools.py] post=None")
+        if (DEBUG==True): logger.info("[scrapertools.py] post=None")
     
     #  Inicializa la librería de las cookies
     ficherocookies = os.path.join( config.get_setting("cookies.dir"), 'cookies.dat' )
-    logger.info("[scrapertools.py] ficherocookies="+ficherocookies)
+    if (DEBUG==True): logger.info("[scrapertools.py] ficherocookies="+ficherocookies)
 
     cj = None
     ClientCookie = None
@@ -1000,13 +1000,13 @@ def get_header_from_response(url,header_to_get="",post=None,headers=[['User-Agen
     # that has useful load and save methods
 
     if os.path.isfile(ficherocookies):
-        logger.info("[scrapertools.py] Leyendo fichero cookies")
+        if (DEBUG==True): logger.info("[scrapertools.py] Leyendo fichero cookies")
         # if we have a cookie file already saved
         # then load the cookies into the Cookie Jar
         try:
             cj.load(ficherocookies)
         except:
-            logger.info("[scrapertools.py] El fichero de cookies existe pero es ilegible, se borra")
+            if (DEBUG==True): logger.info("[scrapertools.py] El fichero de cookies existe pero es ilegible, se borra")
             os.remove(ficherocookies)
 
     if header_to_get=="location":
@@ -1023,9 +1023,9 @@ def get_header_from_response(url,header_to_get="",post=None,headers=[['User-Agen
 
     # Traza la peticion
     if post is None:
-        logger.info("[scrapertools.py] petición GET")
+        if (DEBUG==True): logger.info("[scrapertools.py] petición GET")
     else:
-        logger.info("[scrapertools.py] petición POST")
+        if (DEBUG==True): logger.info("[scrapertools.py] petición POST")
     
     # Login y password Filenium
     # http://abcd%40gmail.com:mipass@filenium.com/get/Oi8vd3d3/LmZpbGVz/ZXJ2ZS5j/b20vZmls/ZS9kTnBL/dm11/b0/?.zip
@@ -1035,11 +1035,11 @@ def get_header_from_response(url,header_to_get="",post=None,headers=[['User-Agen
         headers.append( [ "Authorization",authorization_header ] )
     
     # Array de cabeceras
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
     for header in headers:
-        logger.info("[scrapertools.py] header=%s" % str(header[0]))
+        if (DEBUG==True): logger.info("[scrapertools.py] header=%s" % str(header[0]))
         txheaders[header[0]]=header[1]
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
 
     # Construye el request
     req = Request(url, post, txheaders)
@@ -1051,34 +1051,34 @@ def get_header_from_response(url,header_to_get="",post=None,headers=[['User-Agen
     # Lee los datos y cierra
     #data=handle.read()
     info = handle.info()
-    logger.info("[scrapertools.py] Respuesta")
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] Respuesta")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
     location_header=""
     for header in info:
-        logger.info("[scrapertools.py] "+header+"="+info[header])
+        if (DEBUG==True): logger.info("[scrapertools.py] "+header+"="+info[header])
         if header==header_to_get:
             location_header=info[header]
     handle.close()
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
 
     # Tiempo transcurrido
     fin = time.clock()
-    logger.info("[scrapertools.py] Descargado en %d segundos " % (fin-inicio+1))
+    if (DEBUG==True): logger.info("[scrapertools.py] Descargado en %d segundos " % (fin-inicio+1))
 
     return location_header
 
 def get_headers_from_response(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']]):
     return_headers = []
-    logger.info("[scrapertools.py] get_headers_from_response url="+url)
+    if (DEBUG==True): logger.info("[scrapertools.py] get_headers_from_response url="+url)
 
     if post is not None:
-        logger.info("[scrapertools.py] post="+post)
+        if (DEBUG==True): logger.info("[scrapertools.py] post="+post)
     else:
-        logger.info("[scrapertools.py] post=None")
+        if (DEBUG==True): logger.info("[scrapertools.py] post=None")
     
     #  Inicializa la librería de las cookies
     ficherocookies = os.path.join( config.get_setting("cookies.dir"), 'cookies.dat' )
-    logger.info("[scrapertools.py] ficherocookies="+ficherocookies)
+    if (DEBUG==True): logger.info("[scrapertools.py] ficherocookies="+ficherocookies)
 
     cj = None
     ClientCookie = None
@@ -1093,13 +1093,13 @@ def get_headers_from_response(url,post=None,headers=[['User-Agent', 'Mozilla/5.0
     # that has useful load and save methods
 
     if os.path.isfile(ficherocookies):
-        logger.info("[scrapertools.py] Leyendo fichero cookies")
+        if (DEBUG==True): logger.info("[scrapertools.py] Leyendo fichero cookies")
         # if we have a cookie file already saved
         # then load the cookies into the Cookie Jar
         try:
             cj.load(ficherocookies)
         except:
-            logger.info("[scrapertools.py] El fichero de cookies existe pero es ilegible, se borra")
+            if (DEBUG==True): logger.info("[scrapertools.py] El fichero de cookies existe pero es ilegible, se borra")
             os.remove(ficherocookies)
 
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj),NoRedirectHandler())
@@ -1113,16 +1113,16 @@ def get_headers_from_response(url,post=None,headers=[['User-Agent', 'Mozilla/5.0
 
     # Traza la peticion
     if post is None:
-        logger.info("[scrapertools.py] petición GET")
+        if (DEBUG==True): logger.info("[scrapertools.py] petición GET")
     else:
-        logger.info("[scrapertools.py] petición POST")
+        if (DEBUG==True): logger.info("[scrapertools.py] petición POST")
     
     # Array de cabeceras
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
     for header in headers:
-        logger.info("[scrapertools.py] header=%s" % str(header[0]))
+        if (DEBUG==True): logger.info("[scrapertools.py] header=%s" % str(header[0]))
         txheaders[header[0]]=header[1]
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
 
     # Construye el request
     req = Request(url, post, txheaders)
@@ -1134,18 +1134,18 @@ def get_headers_from_response(url,post=None,headers=[['User-Agent', 'Mozilla/5.0
     # Lee los datos y cierra
     #data=handle.read()
     info = handle.info()
-    logger.info("[scrapertools.py] Respuesta")
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] Respuesta")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
     location_header=""
     for header in info:
-        logger.info("[scrapertools.py] "+header+"="+info[header])
+        if (DEBUG==True): logger.info("[scrapertools.py] "+header+"="+info[header])
         return_headers.append( [header,info[header]] )
     handle.close()
-    logger.info("[scrapertools.py] ---------------------------")
+    if (DEBUG==True): logger.info("[scrapertools.py] ---------------------------")
 
     # Tiempo transcurrido
     fin = time.clock()
-    logger.info("[scrapertools.py] Descargado en %d segundos " % (fin-inicio+1))
+    if (DEBUG==True): logger.info("[scrapertools.py] Descargado en %d segundos " % (fin-inicio+1))
 
     return return_headers
 
@@ -1181,14 +1181,14 @@ def get_filename_from_url(url):
 
 # Parses the title of a tv show episode and returns the season id + episode id in format "1x01"
 def get_season_and_episode(title):
-    logger.info("get_season_and_episode('"+title+"')")
+    if (DEBUG==True): logger.info("get_season_and_episode('"+title+"')")
 
     patron ="(\d+)[x|X](\d+)"
     matches = re.compile(patron).findall(title)
-    logger.info(str(matches))
+    if (DEBUG==True): logger.info(str(matches))
     filename=matches[0][0]+"x"+matches[0][1]
 
-    logger.info("get_season_and_episode('"+title+"') -> "+filename)
+    if (DEBUG==True): logger.info("get_season_and_episode('"+title+"') -> "+filename)
     
     return filename
 

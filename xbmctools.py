@@ -777,14 +777,14 @@ def renderItems(itemlist, params, url, category,isPlayable='false'):
             
             if item.fanart=="":
 
-                channel_fanart = os.path.join( config.get_runtime_path(), 'resources', 'images', 'fanart', item.channel+'.jpg')
+                ###channel_fanart = os.path.join( config.get_runtime_path(), 'resources', 'images', 'fanart', item.channel+'.jpg')
 
-                if os.path.exists(channel_fanart):
-                    item.fanart = channel_fanart
-                else:
+                ###if os.path.exists(channel_fanart):
+                ###    item.fanart = channel_fanart
+                ###else:
                     item.fanart = os.path.join(config.get_runtime_path(),"fanart.jpg")
 
-            if item.folder :
+            if item.folder:
                 if len(item.extra)>0:
                     addnewfolderextra( item.channel , item.action , item.category , item.title , item.url , item.thumbnail , item.plot , extradata = item.extra , totalItems = len(itemlist), fanart=item.fanart , context=item.context, show=item.show, fulltitle=item.fulltitle )
                 else:

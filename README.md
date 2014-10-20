@@ -4,4 +4,16 @@ EarthCam.com is the premiere network of scenic webcams and offers a complete dat
 
 v1.0.7 was broken, so I forked this v1.0.7.1 to fix it.
 
-forked by idleloop from [official-xbmc-hub-repo](http://www.xbmchub.com/forums/official-xbmc-hub-repo/)
+### Fork
+
+forked from [official-xbmc-hub-repo](http://www.xbmchub.com/forums/official-xbmc-hub-repo/)
+
+### License
+
+Distributed [under GPL 3](http://www.gnu.org/licenses/gpl-3.0.html).
+
+Original jzbd project distributed under GPL 2.1.
+
+### Contact
+
+idleloop -at- yahoo.com
