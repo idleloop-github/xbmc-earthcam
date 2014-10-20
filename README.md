@@ -12,8 +12,6 @@ forked from [official-xbmc-hub-repo](http://www.xbmchub.com/forums/official-xbmc
 
 Distributed [under GPL 3](http://www.gnu.org/licenses/gpl-3.0.html).
 
-Original jzbd project distributed under GPL 2.1.
-
 ### Contact
 
 idleloop -at- yahoo.com
