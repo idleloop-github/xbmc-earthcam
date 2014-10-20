@@ -223,7 +223,7 @@ def previous_play(item, just_check=False):
 
 def play(item):
     itemlist = []
-    if re.search( r'(\.flv|\.mp4|\.jpg|\.png)$', item.url ):
+    if re.search( r'(\.flv|\.mp4|\.jpg|\.png)$', item.url ) or item.url.startswith("rtmp"):
         itemlist.append( item )
     else:   # for backward compatitbility with v1.0.7 favorites
         itemlist=previous_play( item )
