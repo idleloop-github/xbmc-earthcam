@@ -1,4 +1,7 @@
-V1.0.7.1
+v1.0.7.3
+more cameras available
+
+v1.0.7.1
 (2014, Oct)
 Code forked by idleloop
 to fix no video at all

@@ -7,7 +7,7 @@
 #------------------------------------------------------------
 
 #Code Upated by: Blazetamer 2014
-#Code Upated by: idleloop @ 2014, Oct
+#Code Updated by: idleloop @ 2014, Oct
 
 import urlparse,urllib2,urllib,re
 import os, sys
@@ -117,6 +117,8 @@ def cams(item):
             if len(item_thereafter) == 1:
                 item=Item( action="play", title=title , url=item_thereafter[0].url, thumbnail=item_thereafter[0].thumbnail, 
                 fanart=item_thereafter[0].fanart, plot=item_thereafter[0].plot, folder=False )
+            elif not item_thereafter: # hide empty menus :-(
+                continue
             itemlist.append( item )
 
     return itemlist
@@ -141,6 +143,23 @@ def previous_play(item, just_check=False):
         try:        
             json_text = (re.search( r'json_base\s+\=\s*(.+);', data )).group(1)
         except Exception, e:
+            pass
+    if len(json_text) < 100:
+        try:
+            # array of pages for deeper inspection throu new previous_play(): so new folder
+            cams = [m.groupdict() for m in 
+                (re.finditer( r' href="(?P<url>index.php\?cam=[^"]+)">.+?<img src="(?P<thumbnail>[^"]+)".+?title="(?P<title>[^"]+)"', 
+                    data, flags=re.DOTALL))]
+            if not cams:
+                return []
+            if (DEBUG==True): logger.info("portal of cams=" + str(cams))
+            for cam_id in cams:
+                new_item=Item(action="previous_play", title=cam_id["title"] , url=item.url + cam_id["url"], thumbnail=cam_id["thumbnail"], 
+                    fanart=cam_id["thumbnail"], plot=cam_id["title"] )
+                itemlist.append( new_item )
+            return itemlist
+        except Exception, e:
+            logger.info("[earthcam] channel.py " + str(e))
             return []
     if (DEBUG==True): logger.info("json_text="+json_text)
     json_decoded = urllib.unquote(json_text)
