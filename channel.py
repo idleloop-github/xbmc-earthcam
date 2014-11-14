@@ -162,11 +162,16 @@ def previous_play(item, just_check=False):
             logger.info("[earthcam] channel.py " + str(e))
             return []
     if (DEBUG==True): logger.info("json_text="+json_text)
-    json_decoded = urllib.unquote(json_text)
-    if (DEBUG==True): logger.info("json_decoded="+json_decoded)
-    json_object = load_json(json_decoded)
+    if json_text.startswith('%'):
+        json_text = urllib.unquote(json_text)
+        if (DEBUG==True): logger.info("json_decoded="+json_text)
+    json_object = load_json(json_text)
     if (DEBUG==True): logger.info("json_object="+str(json_object))
-    
+    try:
+        cam_data=json_object["cam"]
+    except Exception, e:
+        return []
+
     #http://www.earthcam.com/usa/newyork/timessquare/?cam=tsstreet
     #if "?cam=" in item.url:
     video_url=""
@@ -189,7 +194,7 @@ def previous_play(item, just_check=False):
     #        fanart=item.thumbnail, thumbnail=item.thumbnail, folder=False) )
     #except:
     #   logger.info("NO cam_id")
-    cam_data=json_object["cam"]
+
     logger.info("len(cam_data)=%d" % len(cam_data))
     for cam_id in cam_data:
         if (just_check==True and len(itemlist)>1): # just checking how menu submenus are here... if >1, info is already enough
@@ -211,7 +216,7 @@ def previous_play(item, just_check=False):
                     video_url = cam_data[cam_id]["archivedomain"] + cam_data[cam_id]["archivepath"]
                 else:
                     continue
-                video_url.replace("//","/")
+                #video_url=re.sub(r'(?<!:)//','/',video_url)
                 url = calculate_url(video_url)
                 item=Item(action="play", url=url, 
                         folder=False)
