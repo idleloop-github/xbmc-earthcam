@@ -1,5 +1,7 @@
 # plugin.video.earthcam plugin for XBMC
 
+This plugin version will show you more webcams than any other version on internet!
+
 EarthCam.com is the premiere network of scenic webcams and offers a complete database of interesting places and views from around the world. EarthCam.com is the worlds favorite webcam network and the EarthCam Network cameras have been seen on top news shows, including CNN Headline News.
 
 v1.0.7 was broken, so I forked this one to fix it.
