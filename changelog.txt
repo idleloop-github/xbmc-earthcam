@@ -1,3 +1,6 @@
+v1.0.10
+background images (fanart) visible while browsing cameras
+
 v1.0.7.3
 more cameras available
 

@@ -6,8 +6,8 @@
 # License: GPL (http://www.gnu.org/licenses/gpl-3.0.html)
 #------------------------------------------------------------
 
-#Code Upated by: Blazetamer 2014
-#Code Updated by: idleloop @ 2014, Oct
+# Code Upated by: Blazetamer 2014
+# Code Updated by: idleloop @ 2014 Oct, 2015 March
 
 import urlparse,urllib2,urllib,re
 import os, sys
@@ -225,7 +225,7 @@ def previous_play(item, just_check=False):
                 except Exception, e:
                     item.title=str(cam_id)
                 try:
-                    item.fanart='http://static.earthcamcdn.com'+cam_data[cam_id]["offlineimage"]
+                    item.fanart=cam_data[cam_id]["offlineimage"]
                 except Exception, e:
                     logger.info("[channel.py] [play] ERROR: no fanart")
                 try:
