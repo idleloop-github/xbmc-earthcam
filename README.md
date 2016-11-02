@@ -20,10 +20,8 @@ forked [from](http://addons.tvaddons.ag/show/plugin.video.earthcam/) official-xb
 
 ### Installation
 
-* [download zip](https://github.com/idleloop-github/xbmc-earthcam/archive/master.zip)
+* [download released zip](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.10/plugin.video.earthcam-1.0.10.zip)
 * XBMC: System / Add-ons / Install from zip file / select this zip
-
-If skilled, previous to installation, rename the directory contained in the zip from "xbmc-earthcam-master" to "plugin.video.earthcam", and the zip to "plugin.video.earthcam-1.0.10.zip" in order to do a *perfect* installation.
 
 ### License
 
