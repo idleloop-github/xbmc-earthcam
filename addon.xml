@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.earthcam"
 	name="EarthCam"
-	version="1.0.10"
+	version="1.0.11"
 	provider-name="xbmchub.com, (forked by idleloop)">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
@@ -13,7 +13,7 @@
     <summary lang="en">EarthCam</summary>
     <description lang="en">EarthCam.com is the premiere network of scenic webcams and offers a complete database of interesting places and views from around the world. EarthCam.com is the worlds favorite webcam network and the EarthCam Network cameras have been seen on top news shows, including CNN Headline News.</description>
     <platform>all</platform>
-    <forum>http://www.xbmchub.com/forums/official-xbmc-hub-repo/</forum>
-    <website>http://www.xbmchub.com/</website>
+    <forum></forum>
+    <website>https://github.com/idleloop-github/xbmc-earthcam</website>
   </extension>
 </addon>
