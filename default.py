@@ -66,7 +66,7 @@ def run():
                 playlist.add( item.url, xlistitem )
     
                 # Reproduce
-                xbmcPlayer = xbmc.Player( xbmc.PLAYER_CORE_AUTO )
+                xbmcPlayer = xbmc.Player()
                 xbmcPlayer.play(playlist)
 
         else:

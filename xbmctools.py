@@ -542,22 +542,7 @@ def play_video(channel="",server="",url="",category="",title="", thumbnail="",pl
             playlist.clear()
             playlist.add( mediaurl, xlistitem )
 
-            # Reproduce
-            playersettings = config.get_setting('player_type')
-            logger.info("[xbmctools.py] playersettings="+playersettings)
-        
-            player_type = xbmc.PLAYER_CORE_AUTO
-            if playersettings == "0":
-                player_type = xbmc.PLAYER_CORE_AUTO
-                logger.info("[xbmctools.py] PLAYER_CORE_AUTO")
-            elif playersettings == "1":
-                player_type = xbmc.PLAYER_CORE_MPLAYER
-                logger.info("[xbmctools.py] PLAYER_CORE_MPLAYER")
-            elif playersettings == "2":
-                player_type = xbmc.PLAYER_CORE_DVDPLAYER
-                logger.info("[xbmctools.py] PLAYER_CORE_DVDPLAYER")
-        
-            xbmcPlayer = xbmc.Player( player_type )
+            xbmcPlayer = xbmc.Player()
             xbmcPlayer.play(playlist)
             
             if channel=="cuevana" and subtitle!="":
