@@ -14,7 +14,7 @@ v1.0.7 was broken, so I forked this one to fix it.
 ### Note for Kodi 17 (Krypton)
 
 Kodi 17 (Krypton) has [some video problems under Windows](http://forum.kodi.tv/showthread.php?tid=304586) which, by the moment, prevent this plugin (and others) to function under **Windows** platforms.    
-If you have problemas with **Kodi 17 on other platforms**, please, install the appropriate **inputstream.rtmp** plugin from [this repo](https://github.com/kodinerds/binary-repo) in order to activate [rtmp videos](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol) for Kodi. That repo supports RPi, RPi2, Odroid_C2, x68_64 and S905. Not Windows nor Mac OS X.
+If you have problems with **Kodi 17 on other platforms**, please, install the appropriate **inputstream.rtmp** plugin from [this repo](https://github.com/kodinerds/binary-repo) in order to activate [rtmp videos](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol) for Kodi. That repo supports RPi, RPi2, Odroid_C2, x68_64 and S905. Not Windows nor Mac OS X.
 
 ### Fork
 
@@ -36,4 +36,4 @@ Distributed [under GPL 3](http://www.gnu.org/licenses/gpl-3.0.html)
 
 [idleloop](http://www.angelfire.com/ego2/idleloop/) -at- yahoo.com   
 
-BTC: 1GX726he5TNgnDuG4qG9zrM6CSN7uyga6F
+**BTC:** 1GX726he5TNgnDuG4qG9zrM6CSN7uyga6F
