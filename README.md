@@ -15,12 +15,12 @@ v1.0.7 was broken, so I forked this one to fix it.
 
 ### Note for Kodi 17 (Krypton)
 
-It is necessary to install the appropriate **inputstream.rtmp** plugin from [this repo](https://github.com/kodinerds/binary-repo) in order to activate [rtmp videos](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol) for Kodi. That repo supports RPi, RPi2, Odroid_C2, x68_64 and S905. Not Windows nor Mac OS X.
+It is necessary to install the appropriate **inputstream.rtmp** plugin from [this repo](https://github.com/kodinerds/binary-repo) in order to activate [rtmp videos](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol) for Kodi. That repo supports RPi, RPi2, Odroid_C2, x68_64 and S905, Windows and Mac OS X.
 
 * Download the appropriate *repository.kodinerds_X.zip* zip file for your platform [from here](https://github.com/kodinerds/binary-repo).
 * Install this repository on Kodi: Add-ons / Download / .. / Install from zip file / *and select kodiners' zip file*. Previously, "Unknown Sources" must have been activated on: Settings / System / Add-ons / Unknown sources
 * Install [this specific plugin.video.earthcam plugin for Kodi 17](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.11/plugin.video.earthcam-1.0.11.Kodi17.zip) which will automatically install *inputstream.rtmp* add-on.
-* **or**, install *inputstream.rtmp* add-on manually: Add-ons / Download / .. / Install from repository / kodinerds / VideoPlayer InputStream / RTMP Input, and then install *plugin.video.earthcam*: Add-ons / Download / .. / Install from zip file / select [earthcam's zip file](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.11/plugin.video.earthcam-1.0.11.zip)
+* **or**, install *inputstream.rtmp* add-on manually: Add-ons / Download / .. / Install from repository / kodinerds / VideoPlayer InputStream / RTMP Input, and then install *plugin.video.earthcam*: Add-ons / Download / .. / Install from zip file / select [earthcam's zip file](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.11/plugin.video.earthcam-1.0.11.zip).
 
 ### Fork
 
