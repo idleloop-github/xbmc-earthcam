@@ -7,7 +7,7 @@
 #------------------------------------------------------------
 
 # Code Upated by: Blazetamer 2014
-# Code Updated by: idleloop @ 2014 Oct, 2015 March
+# Code Updated by: idleloop @ 2014 Oct, 2015 March, 2017 Aug
 
 import urlparse,urllib2,urllib,re
 import os, sys
@@ -17,8 +17,10 @@ from core import config
 from core import scrapertools
 from core.item import Item
 
-DEBUG = config.get_setting("debug")
-URL = "http://www.earthcam.com/network/"
+DEBUG = False
+if (config.get_setting("debug") == 'true'):
+        DEBUG=True
+URL = "https://www.earthcam.com/network/"
 IMAGES = os.path.join(config.get_runtime_path(),"resources")
 
 def isGeneric():
@@ -40,14 +42,14 @@ def worldwide(item):
     patron  = ';" href="([^"]+)" class="locationLink">(.+?)</a>'
     #patron  = '<p class="location"><a\s+onclick="[^"]+" href="(/network/index.php\?page\=world\&country\=[^"]+)" class="[^"]+">([^<]+)</a></p>'
     matches = re.compile(patron,re.DOTALL).findall(data)
-    if (DEBUG==True): scrapertools.printMatches(matches)
+    if (DEBUG): scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle in matches:
         url = urlparse.urljoin(item.url,scrapedurl)
         url = url.replace('[','').replace(']','')
         print'WORLDWIDE PARSED IS ' +url
         title = scrapedtitle.strip()
-        if (DEBUG==True): logger.info("title=["+title+"], url=["+url+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"]")
         if 'page=world' in url:
             itemlist.append( Item(action="cams", title=title , url=url, fanart=os.path.join(IMAGES,"fanart.jpg") ) )
 
@@ -62,13 +64,13 @@ def usa(item):
     #patron  = '<p class="location"><a  onclick="[^"]+" href="(index.php?country=us&[^"]+)" class="[^"]+">([^<]+)</a>'
     matches = re.compile(patron,re.DOTALL).findall(data)
     #match=re.compile(';" href="(.+?)" class="locationLink">(.+?)</a>').findall(link)
-    if (DEBUG==True): scrapertools.printMatches(matches)
+    if (DEBUG): scrapertools.printMatches(matches)
 
     for scrapedurl,scrapedtitle in matches:
         url = urlparse.urljoin(item.url,scrapedurl)
         print'USA PARSED IS ' +url
         title = scrapedtitle.strip()
-        if (DEBUG==True): logger.info("title=["+title+"], url=["+url+"]")
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"]")
         if 'country=us'in url:
          itemlist.append( Item(action="cams", title=title , url=url, fanart=os.path.join(IMAGES,"fanart.jpg") ) )
 
@@ -90,7 +92,7 @@ def cams(item):
     patron += '<p style="[^"]+" class="featuredCity">([^<]+)</p>[^<]+'
     patron += '<p style="[^"]+" class="featuredDescription">([^<]+)</p>'
     matches = re.compile(patron,re.DOTALL).findall(data)
-    if (DEBUG==True): scrapertools.printMatches(matches)
+    if (DEBUG): scrapertools.printMatches(matches)
 
     if len(matches)==0:
         patron  = '<div[^<]+'
@@ -101,23 +103,24 @@ def cams(item):
         patron += '<p style="[^"]+"[^>]+>([^<]+)</p>[^<]+'
         patron += '<p style="[^"]+"[^>]+>([^<]+)</p>'
         matches = re.compile(patron,re.DOTALL).findall(data)
-        if (DEBUG==True): scrapertools.printMatches(matches)
+        if (DEBUG): scrapertools.printMatches(matches)
     
     for scrapedthumbnail,scrapedurl,scrapedtitle,location,scrapedplot in matches:
         url = urlparse.urljoin(item.url,scrapedurl)
-        logger.info(url)
         thumbnail = urlparse.urljoin(item.url,scrapedthumbnail)
         title = scrapedtitle.strip()+" ("+location+")"
         plot = scrapedplot.strip()
-        if (DEBUG==True): logger.info("title=["+title+"], url=["+url+"]")
-        if url.startswith("http://www.earthcam.com") and not url.startswith("http://www.earthcam.com/client/"):
+        if (DEBUG): logger.info("title=["+title+"], url=["+url+"]")
+        if re.search('^https?://www.earthcam.com(?!/client/)' ,url):
             item=Item(action="previous_play", title=title , url=url, thumbnail=thumbnail, 
                 fanart=thumbnail, plot=plot )
             item_thereafter=previous_play(item, True)
             if len(item_thereafter) == 1:
+                if (DEBUG): logger.info("url accepted: " + title + "," + item_thereafter[0].url)
                 item=Item( action="play", title=title , url=item_thereafter[0].url, thumbnail=item_thereafter[0].thumbnail, 
                 fanart=item_thereafter[0].fanart, plot=item_thereafter[0].plot, folder=False )
             elif not item_thereafter: # hide empty menus :-(
+                if (DEBUG): logger.info("url discarded: " + title + url)
                 continue
             itemlist.append( item )
 
@@ -127,7 +130,7 @@ def previous_play(item, just_check=False):
     itemlist = []
 
     data = scrapertools.cache_page(item.url)
-    logger.info("item.url="+item.url)
+    if (DEBUG): logger.info("item.url="+item.url)
     # Extracts json info
     json_text=''
     try:
@@ -152,7 +155,7 @@ def previous_play(item, just_check=False):
                     data, flags=re.DOTALL))]
             if not cams:
                 return []
-            if (DEBUG==True): logger.info("portal of cams=" + str(cams))
+            if (DEBUG): logger.info("portal of cams=" + str(cams))
             for cam_id in cams:
                 new_item=Item(action="previous_play", title=cam_id["title"] , url=item.url + cam_id["url"], thumbnail=cam_id["thumbnail"], 
                     fanart=cam_id["thumbnail"], plot=cam_id["title"] )
@@ -161,12 +164,12 @@ def previous_play(item, just_check=False):
         except Exception, e:
             logger.info("[earthcam] channel.py " + str(e))
             return []
-    if (DEBUG==True): logger.info("json_text="+json_text)
+    if (DEBUG): logger.info("json_text="+json_text)
     if json_text.startswith('%'):
         json_text = urllib.unquote(json_text)
-        if (DEBUG==True): logger.info("json_decoded="+json_text)
+        if (DEBUG): logger.info("json_decoded="+json_text)
     json_object = load_json(json_text)
-    if (DEBUG==True): logger.info("json_object="+str(json_object))
+    if (DEBUG): logger.info("json_object="+str(json_object))
     try:
         cam_data=json_object["cam"]
     except Exception, e:
@@ -180,7 +183,7 @@ def previous_play(item, just_check=False):
     #    cam_id = item.url.split("?")[1].split("=")[1]
     #    logger.info("cam_id="+cam_id)
     #    cam_data=json_object["cam"][cam_id]
-    #    if (DEBUG==True): logger.info("cam_data="+str(cam_data))
+    #    if (DEBUG): logger.info("cam_data="+str(cam_data))
 
     #    offline = cam_data["showOfflineMessage"]
     #    logger.info("offline="+offline)
@@ -195,13 +198,13 @@ def previous_play(item, just_check=False):
     #except:
     #   logger.info("NO cam_id")
 
-    logger.info("len(cam_data)=%d" % len(cam_data))
+    if (DEBUG): logger.info("len(cam_data)=%d" % len(cam_data))
     for cam_id in cam_data:
-        if (just_check==True and len(itemlist)>1): # just checking how menu submenus are here... if >1, info is already enough
+        if (just_check and len(itemlist)>1): # just checking how menu submenus are here... if >1, info is already enough
             return itemlist
-        logger.info("cam_id="+str(cam_id))
+        if (DEBUG): logger.info("cam_id="+str(cam_id))
         liveon = cam_data[cam_id]["liveon"]
-        logger.info("liveon="+liveon)
+        if (DEBUG): logger.info("liveon="+liveon)
         if liveon!="disabled":
             ###video_url = cam_data[cam_id]["worldtour_path"]
             video_url
@@ -262,7 +265,7 @@ def calculate_url(video_url):
     # rtmp://video2.earthcam.com/ app=fecnetwork swfUrl=http://www.earthcam.com/swf/cam_player_v2/ecnPlayer.swf playpath=fridaysHD1.flv live=true timeout=180
     if video_url.lower().endswith(".jpg") or video_url.lower().endswith(".png"):
         url = video_url
-    elif video_url.lower().startswith("http://") or video_url.lower().endswith(".mp4"):
+    elif video_url.lower().startswith("http://") or video_url.lower().startswith("https://") or video_url.lower().endswith(".mp4"):
         url = video_url
     else:
         rtmp_url = scrapertools.get_match(video_url,"(rtmp\://[^\/]+/)")
@@ -271,7 +274,7 @@ def calculate_url(video_url):
         playpath = scrapertools.get_match(video_url,"rtmp\://[^\/]+/[a-z]+/(.+\.flv)")
         swfurl = "http://www.earthcam.com/swf/cam_player_v2/ecnPlayer.swf"
         url=rtmp_url + " app=" + app + " swfUrl=" + swfurl + " playpath=" + playpath + " live=true timeout=180"
-    logger.info("url="+url)
+    if (DEBUG): logger.info("url="+url)
     return url
 
 

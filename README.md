@@ -28,11 +28,12 @@ forked [from](http://addons.tvaddons.ag/show/plugin.video.earthcam/) official-xb
 
 ### Changes
 
-* v1.0.7 was broken, fixed.
+* Kodi 17.3 compatible
 * more cams available
 * readable cam descriptions (with "Media Info" Confluence View, for example)
 * better still previews if available (showed as background with Confluence)
 * "XBMC favourites" compatible with previous plugin versions - the reverse could not be true
+* v1.0.7 was broken, fixed.
 
 ### License
 

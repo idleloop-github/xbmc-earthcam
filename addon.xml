@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <addon id="plugin.video.earthcam"
 	name="EarthCam"
-	version="1.0.11"
-	provider-name="xbmchub.com, (forked by idleloop)">
+	version="1.0.12"
+	provider-name="idleloop, (forked from xbmchub.com)">
   <requires>
     <import addon="xbmc.python" version="2.1.0"/>
   </requires>
