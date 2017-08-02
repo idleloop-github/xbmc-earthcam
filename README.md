@@ -8,10 +8,10 @@ v1.0.7 was broken, so I forked this one to fix it.
 
 ### Installation
 
-* [download released zip](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.11/plugin.video.earthcam-1.0.11.zip)
+* [download released zip](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.12/plugin.video.earthcam-1.0.12.zip)
 * Kodi/XBMC: System / Add-ons / Install from zip file / 
 * or Kodi 17: Add-ons / Download / .. / Install from zip file /
-* select [earthcam's zip file](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.11/plugin.video.earthcam-1.0.11.zip)
+* select [earthcam's zip file](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.12/plugin.video.earthcam-1.0.12.zip)
 
 ### Note for Kodi 17 (Krypton)
 
@@ -19,8 +19,8 @@ It is necessary to install the appropriate **inputstream.rtmp** plugin from [thi
 
 * Download the appropriate *repository.kodinerds_X.zip* zip file for your platform [from here](https://github.com/kodinerds/binary-repo).
 * Install this repository on Kodi: Add-ons / Download / .. / Install from zip file / *and select kodiners' zip file*. Previously, "Unknown Sources" must have been activated on: Settings / System / Add-ons / Unknown sources
-* Install [this specific plugin.video.earthcam plugin for Kodi 17](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.11/plugin.video.earthcam-1.0.11.Kodi17.zip) which will automatically install *inputstream.rtmp* add-on.
-* **or**, install *inputstream.rtmp* add-on manually: Add-ons / Download / .. / Install from repository / kodinerds / VideoPlayer InputStream / RTMP Input, and then install *plugin.video.earthcam*: Add-ons / Download / .. / Install from zip file / select [earthcam's zip file](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.11/plugin.video.earthcam-1.0.11.zip).
+* Install [this specific plugin.video.earthcam plugin for Kodi 17](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.12/plugin.video.earthcam-1.0.12.Kodi17.zip) which will automatically install *inputstream.rtmp* add-on.
+* **or**, install *inputstream.rtmp* add-on manually: Add-ons / Download / .. / Install from repository / kodinerds / VideoPlayer InputStream / RTMP Input, and then install *plugin.video.earthcam*: Add-ons / Download / .. / Install from zip file / select [earthcam's zip file](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.0.12/plugin.video.earthcam-1.0.12.zip).
 
 ### Fork
 
