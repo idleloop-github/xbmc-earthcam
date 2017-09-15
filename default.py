@@ -107,7 +107,7 @@ def run():
         ventana_error = xbmcgui.Dialog()
         # Agarra los errores surgidos localmente enviados por las librerias internas
         if hasattr(e, 'reason'):
-            logger.info("Razon del error, codigo: %d , Razon: %s" %(e.reason[0],e.reason[1]))
+            logger.info("Razon del error, codigo: %d , Razon: %s" %(e.code,e.reason))
             texto = "No se puede conectar con el sitio web"
             ok = ventana_error.ok ("plugin", texto)
         # Agarra los errores con codigo de respuesta del servidor externo solicitado     

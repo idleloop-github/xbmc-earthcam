@@ -25,7 +25,9 @@ CACHE_NUNCA = "2"   # No cachear nada
 CACHE_PATH = config.get_setting("cache.dir")
 logger.info("[scrapertools.py] CACHE_PATH="+CACHE_PATH)
 
-DEBUG = config.get_setting("debug")
+DEBUG=False
+if (config.get_setting("debug") == 'true'):
+        DEBUG=True
 
 def cache_page(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']],modo_cache=CACHE_ACTIVA, timeout=socket.getdefaulttimeout()):
     return cachePage(url,post,headers,modo_cache,timeout=timeout)
@@ -33,6 +35,7 @@ def cache_page(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U;
 # TODO: (3.1) Quitar el parámetro modoCache (ahora se hace por configuración)
 # TODO: (3.2) Usar notación minusculas_con_underscores para funciones y variables como recomienda Python http://www.python.org/dev/peps/pep-0008/
 def cachePage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; Intel Mac OS X 10.6; es-ES; rv:1.9.2.12) Gecko/20101026 Firefox/3.6.12']],modoCache=CACHE_ACTIVA, timeout=socket.getdefaulttimeout()):
+    url = urllib2.quote(url, safe='/:?=&') # :-o
     if (DEBUG==True): logger.info("[scrapertools.py] cachePage url="+url)
     modoCache = config.get_setting("cache.mode")
 
@@ -60,6 +63,9 @@ def cachePage(url,post=None,headers=[['User-Agent', 'Mozilla/5.0 (Macintosh; U; 
         try:
             data = downloadpage(url,post,headers, timeout=timeout)
         except:
+            import sys
+            for line in sys.exc_info():
+                logger.error( "%s" % line )
             data=""
     
     # CACHE_SIEMPRE: Siempre descarga de cache, sin comprobar fechas, excepto cuando no está

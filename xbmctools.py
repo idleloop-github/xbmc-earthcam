@@ -22,7 +22,9 @@ try:
 except:
     pluginhandle = ""
 
-DEBUG = True
+DEBUG = False
+if (config.get_setting("debug") == 'true'):
+        DEBUG=True
 
 def addnewfolder( canal , accion , category , title , url , thumbnail , plot , Serie="",totalItems=0,fanart="",context="", show="",fulltitle=""):
     if fulltitle=="":
