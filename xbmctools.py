@@ -64,6 +64,8 @@ def addnewfolderextra( canal , accion , category , title , url , thumbnail , plo
 #    title = title.replace("&","%26").replace("+","%2B").replace("%","%25")
     try:
         title = title.encode ("utf-8") #This only aplies to unicode strings. The rest stay as they are.
+        fulltitle = fulltitle.encode ("utf-8") #This only aplies to unicode strings. The rest stay as they are.
+        plot  = plot.encode  ("utf-8") #This only aplies to unicode strings. The rest stay as they are.
     except:
         pass
     itemurl = '%s?channel=%s&action=%s&category=%s&title=%s&fulltitle=%s&url=%s&thumbnail=%s&plot=%s&extradata=%s&Serie=%s&show=%s' % ( sys.argv[ 0 ] , canal , accion , urllib.quote_plus( category ) , urllib.quote_plus(title) , urllib.quote_plus(fulltitle) , urllib.quote_plus( url ) , urllib.quote_plus( thumbnail ) , urllib.quote_plus( plot ) , urllib.quote_plus( extradata ) , Serie, urllib.quote_plus( show ))

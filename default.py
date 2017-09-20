@@ -39,65 +39,72 @@ def run():
             itemlist = channel.play(item)
             if len(itemlist)==0:
                 return
-            item = itemlist[0]
-            
-            if item.url.lower().endswith(".jpg") or item.url.lower().endswith(".png"):
-                import os
-                slideshowpath = os.path.join(config.get_data_path(),"slideshow")
-                if not os.path.exists(slideshowpath):
-                    try:
-                        os.mkdir(slideshowpath)
-                    except:
-                        pass
+            elif len(itemlist)==1:
 
-                urllib.urlretrieve(item.url, os.path.join(slideshowpath,"temp.jpg"))
-                import xbmc
-                xbmc.executebuiltin( "SlideShow("+slideshowpath+")" )
+                item = itemlist[0]
+
+                if item.url.lower().endswith(".jpg") or item.url.lower().endswith(".png"):
+                    import os
+                    slideshowpath = os.path.join(config.get_data_path(),"slideshow")
+                    if not os.path.exists(slideshowpath):
+                        try:
+                            os.mkdir(slideshowpath)
+                        except:
+                            pass
+
+                    urllib.urlretrieve(item.url, os.path.join(slideshowpath,"temp.jpg"))
+                    import xbmc
+                    xbmc.executebuiltin( "SlideShow("+slideshowpath+")" )
+                else:
+                    import xbmcplugin,xbmcgui,xbmc,xbmcaddon,sys
+                    xlistitem = xbmcgui.ListItem( item.title, iconImage="DefaultVideo.png", thumbnailImage=item.thumbnail, path=item.url)
+                    xlistitem.setInfo( "video", { "Title": item.title, "Plot" : item.plot , "Genre" : item.category } )
+
+                    #xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, xbmcgui.ListItem(path=item.url))
+
+                    # Añadimos el listitem a una lista de reproducción (playlist)
+                    playlist = xbmc.PlayList( xbmc.PLAYLIST_VIDEO )
+                    playlist.clear()
+                    playlist.add( item.url, xlistitem )
+
+                    # Reproduce
+                    xbmcPlayer = xbmc.Player()
+                    xbmcPlayer.play(playlist)
+
+                return
+
+        # if other action
+        # OR
+        # len(itemlist)>1 for action=="play":
+
+        import channel
+        generico = True
+
+        if action=="search":
+            logger.info("[launcher.py] search")
+            import xbmc
+            keyboard = xbmc.Keyboard("")
+            keyboard.doModal()
+            if (keyboard.isConfirmed()):
+                tecleado = keyboard.getText()
+                tecleado = tecleado.replace(" ", "+")
+                itemlist = channel.search(item,tecleado)
             else:
-                import xbmcplugin,xbmcgui,xbmc,xbmcaddon,sys
-                xlistitem = xbmcgui.ListItem( item.title, iconImage="DefaultVideo.png", thumbnailImage=item.thumbnail, path=item.url)
-                xlistitem.setInfo( "video", { "Title": item.title, "Plot" : item.plot , "Genre" : item.category } )
-    
-                #xbmcplugin.setResolvedUrl(int(sys.argv[1]), True, xbmcgui.ListItem(path=item.url))
-    
-                # Añadimos el listitem a una lista de reproducción (playlist)
-                playlist = xbmc.PlayList( xbmc.PLAYLIST_VIDEO )
-                playlist.clear()
-                playlist.add( item.url, xlistitem )
-    
-                # Reproduce
-                xbmcPlayer = xbmc.Player()
-                xbmcPlayer.play(playlist)
+                itemlist = []
 
         else:
-            import channel
-            generico = True
+            exec "itemlist = channel."+action+"(item)"
 
-            if action=="search":
-                logger.info("[launcher.py] search")
-                import xbmc
-                keyboard = xbmc.Keyboard("")
-                keyboard.doModal()
-                if (keyboard.isConfirmed()):
-                    tecleado = keyboard.getText()
-                    tecleado = tecleado.replace(" ", "+")
-                    itemlist = channel.search(item,tecleado)
-                else:
-                    itemlist = []
+        # Activa el modo biblioteca
+        #import xbmcplugin
+        #import sys
+        #handle = sys.argv[1]
+        #xbmcplugin.setContent(int( handle ),"movies")
 
-            else:
-                exec "itemlist = channel."+action+"(item)"
+        # AÃ±ade los items a la lista de XBMC
 
-            # Activa el modo biblioteca
-            #import xbmcplugin
-            #import sys
-            #handle = sys.argv[1]
-            #xbmcplugin.setContent(int( handle ),"movies")
-            
-            # AÃ±ade los items a la lista de XBMC
-
-            import xbmctools
-            xbmctools.renderItems(itemlist, params, url, category)
+        import xbmctools
+        xbmctools.renderItems(itemlist, params, url, category)
 
     except urllib2.URLError,e:
         import sys
