@@ -15,6 +15,21 @@ EarthCam.com is the premiere network of scenic webcams and offers a complete dat
 From version 1.2.0 on, this add-on can play [HLS streams](https://en.wikipedia.org/wiki/HTTP_Live_Streaming), and this mode is more stable than [RTMP](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol).   
 Please follow **Enable HLS playing** instructions to try it.   
 
+### Note for Kodi 17 (Krypton)
+
+* Now, it is necessary to activate the "RTMP input stream": Add-ons / My Add-ons / VideoPlayer InputStream / RTMP Input / Enable
+
+If after enabling the "RTMP input stream" no camera is shown (please, note that some links may not be active: try some USA cams first), the RTMP library may not be functioning - in this case you can try **Install inputstream.rtmp add-on** instructions,   
+**OR** try **Enable HLS playing** instructions.
+
+##### Install **inputstream.rtmp** add-on
+Steps to install an **inputstream.rtmp** add-on from [kodinerds repo](https://github.com/kodinerds/binary-repo) in order to activate [rtmp videos](https://en.wikipedia.org/wiki/Real-Time_Messaging_Protocol) for Kodi. That repo supports RPi2 (compatible with RPi3), Odroid-C2 (deprecated), Windows and Mac OS X.
+
+* Download the appropriate *repository.kodinerds_X.zip* zip file for your platform [from here](https://github.com/kodinerds/binary-repo).
+* Install this repository on Kodi: Add-ons / Download / .. / Install from zip file / *and select kodiners' zip file*. Previously, "Unknown Sources" must have been activated on: Settings / System / Add-ons / Unknown sources
+* Install *inputstream.rtmp* add-on: Add-ons / Download / .. / Install from repository / kodinerds / VideoPlayer InputStream / RTMP Input
+* and then, install *plugin.video.earthcam*: Add-ons / Download / .. / Install from zip file / select [earthcam's zip file](https://github.com/idleloop-github/xbmc-earthcam/releases/download/v1.2.0/plugin.video.earthcam-1.2.0.zip).
+
 ##### Enable HLS playing
 From version 1.2.0 on, this add-on can play [HLS streams](https://en.wikipedia.org/wiki/HTTP_Live_Streaming).   
 From version 1.3.0 on, HLS is activated by default.   
