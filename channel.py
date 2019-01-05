@@ -55,7 +55,7 @@ def searching( action ):
     dialog = xbmcgui.Dialog()
     search_term = dialog.input(heading='Type term of serch for EarthCam :', type=xbmcgui.INPUT_ALPHANUM)
     del dialog
-    search_term.replace( ' ', '%20' )
+    search_term = search_term.replace( ' ', '+' )
     if len(search_term)==0:
         return []
     url = URL + SEARCH_URL + search_term
