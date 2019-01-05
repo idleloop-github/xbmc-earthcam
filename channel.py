@@ -24,9 +24,6 @@ from core import config
 from core import scrapertools
 from core.item import Item
 
-import socket
-socket.setdefaulttimeout( 13 )
-
 DEBUG = False
 if (config.get_setting("debug") == 'true'):
         DEBUG=True
@@ -67,30 +64,7 @@ def searching( action ):
 
 def _get_html(url, retries=5):
     url = url.replace( ' ', '%20' )
-    logger.info('_get_html opening url "%s"' % url)
-    req = urllib2.Request(url, None, { 'User-Agent' : 'Mozilla/5.0' })
-    html = ''
-    retry_counter=0
-    RETRY_TIME = 1
-    while True:
-        try:
-            html = urllib2.urlopen(req).read()
-            logger.info('_get_html received %d bytes' % len(html))
-            break
-        except urllib2.HTTPError as ex:
-            logger.info('_get_html error: %s' % ex)
-            if (re.match(r'HTTP Error 4.+', str(ex))):
-                raise
-            dialog = xbmcgui.Dialog()
-            dialog.notification( 'EarthCam',
-                'waiting for remote server ...',
-                xbmcgui.NOTIFICATION_INFO, int(RETRY_TIME*5000) )
-            retry_counter += retry_counter
-            time.sleep(RETRY_TIME + randint(0, 2*retries))
-            pass
-        if retry_counter >= retries:
-            break
-    return html
+    return scrapertools.cache_page( url )
 
 
 def _get_category(item, category):
@@ -224,7 +198,7 @@ def cams(item):
 def previous_play(item, just_check=False):
     itemlist = []
 
-    data = scrapertools.cache_page(item.url)
+    data = _get_html( item.url )
     if (DEBUG): logger.info("item.url="+item.url)
     # Extracts json info
     json_text=''
