@@ -7,7 +7,7 @@
 #------------------------------------------------------------
 
 # Code Upated by: Blazetamer 2014
-# Code Updated by: idleloop @ 2014 Oct, 2015 March, 2017 Aug, 2017 Sept
+# Code Updated by: idleloop @ 2014 Oct, 2015 March, 2017 Aug, 2017 Sept, 2019 Jan
 
 import urlparse,urllib2,urllib,re
 import os, sys
@@ -343,7 +343,7 @@ def calculate_url(video_url):
         ###playpath = scrapertools.get_match(video_url,"rtmp\://[^\/]+/[a-z]+/([a-zA-Z0-9]+\.flv)")
         playpath = scrapertools.get_match(video_url,"rtmp\://[^\/]+/[a-z]+/(.+\.flv)")
         swfurl = "https://www.earthcam.com/swf/cam_player_v2/ecnPlayer.swf"
-        url=rtmp_url + " app=" + app + " swfUrl=" + swfurl + " playpath=" + playpath + " live=true timeout=180"
+        url=rtmp_url + " app=" + app + " swfUrl=" + swfurl + " playpath=" + playpath + " live=true timeout=10"
     if (DEBUG): logger.info("calculated_url="+url)
     return url
 

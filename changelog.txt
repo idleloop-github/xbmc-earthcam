@@ -1,6 +1,7 @@
 V1.3.0
 (2019, Jan)
 patched site, speed up by using parseDOM
+buggy timeout in rtmp videos reduced (from 180s to 10s)
 
 v1.2.0
 (2017, Sept)   
