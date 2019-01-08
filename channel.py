@@ -43,9 +43,9 @@ def isGeneric():
 
 
 def mainlist(item):
-    logger.info("[channel.py] mainlist")
+    if (DEBUG): ("[channel.py] mainlist")
     itemlist=[]
-    itemlist.append( Item(action="cams",  title="Featured Cams" , url=URL ) )
+    itemlist.append( Item(action="cams",  title="Featured Cams" , url=PLACES_URL ) )
     itemlist.append( Item(action="places", title="Places" , url=PLACES_URL ) )
     itemlist.append( Item(action="searching",    title="Search" ,    url='' ) )
     return itemlist
@@ -107,16 +107,16 @@ def _get_category(item, category):
         divs = parseDOM( html, 'div', attrs={'class': r'[^\'"]*?col\-xs\-12' } )
         zone = parseDOM( html, 'p', attrs={ 'class': 'pageTitle' } )[0].replace(':', '')
         for _id, div in enumerate( divs ):
-                thumbnail = parseDOM( div, 'img', ret='src' )[0].replace('256x144', '512x288').replace('128x72', '256x144')
-                url       = parseDOM( div, 'a', ret='href' )[0]
-                title     = parseDOM( div, 'span', attrs={'class': 'featuredTitle'} )[0]
-                location  = parseDOM( div, 'div', attrs={ 'class': 'featuredCity' } )[0] + ', ' + zone
-                plot      = title + "\n(" + location + ')'
-                if plot == None: plot=''
-                if (DEBUG): logger.info("%s, %s, %s, %s, %s" % (title, thumbnail, url, location, plot))
-                item=Item(action="play", title=title, url=url, thumbnail=thumbnail,
-                    fanart=thumbnail, plot=plot )
-                itemlist.append( item )
+            thumbnail = parseDOM( div, 'img', ret='src' )[0].replace('256x144', '512x288').replace('128x72', '256x144')
+            url       = parseDOM( div, 'a', ret='href' )[0]
+            title     = parseDOM( div, 'span', attrs={'class': 'featuredTitle'} )[0]
+            location  = parseDOM( div, 'div', attrs={ 'class': 'featuredCity' } )[0] + ', ' + zone
+            plot      = title + "\n(" + location + ')'
+            if plot == None: plot=''
+            if (DEBUG): logger.info("%s, %s, %s, %s, %s" % (title, thumbnail, url, location, plot))
+            item=Item(action="play", title=title, url=url, thumbnail=thumbnail,
+                fanart=thumbnail, plot=plot )
+            itemlist.append( item )
 
     try:
         links = parseDOM( parseDOM( html, 'div', attrs={'id': 'pagination_bottom'} ), 'a', ret='href' )
@@ -129,7 +129,7 @@ def _get_category(item, category):
                 category = 'search_results'
             else:
                 url = URL + PREFIX_PATCH + url[1:]
-            logger.info(url)
+            if (DEBUG): (url)
             item=Item(action=category, title='Next >>' , url=url, thumbnail='',
                     fanart='', plot='' )
             itemlist.append( item )
@@ -140,17 +140,17 @@ def _get_category(item, category):
 
 
 def search_results(item):
-    logger.info("[channel.py] search_results")
+    if (DEBUG): ("[channel.py] search_results")
     return _get_category( item, 'search_results' )
 
 
 def place(item):
-    logger.info("[channel.py] place")
+    if (DEBUG): ("[channel.py] place")
     return _get_category( item, 'place' )
 
 
 def places(item):
-    logger.info("[channel.py] places")
+    if (DEBUG): ("[channel.py] places")
     itemlist = []
     html = _get_html( item.url )
     places = parseDOM( html, 'a', attrs={'class': 'locationLink'} )
@@ -166,12 +166,31 @@ def places(item):
 
 # featured cams
 def cams(item):
-    logger.info("[channel.py] cams")
+    if (DEBUG): ("[channel.py] cams")
     itemlist = []
 
     if (DEBUG): logger.info("url=" + item.url)
 
     html = _get_html( item.url )
+    divs = parseDOM( html, 'div', attrs={'class': r'[^\'"]*?col\-xs\-12' } )
+    for _id, div in enumerate( divs ):
+        thumbnail = parseDOM( div, 'img', ret='src' )[0].replace('256x144', '512x288').replace('128x72', '256x144')
+        url       = parseDOM( div, 'a', ret='href' )[0]
+        if 'www.earthcam.com' not in url or 'alexa' in url or 'myearthcam' in url:
+            continue
+        title     = parseDOM( div, 'span', attrs={'class': 'featuredTitle'} )[0]
+        location  = parseDOM( div, 'div', attrs={ 'class': 'featuredCity' } )[0]
+        plot      = title + "\n(" + location + ')'
+        if plot == None: plot=''
+        if (DEBUG): logger.info("%s, %s, %s, %s, %s" % (title, thumbnail, url, location, plot))
+        item=Item(action="play", title=title, url=url, thumbnail=thumbnail,
+            fanart=thumbnail, plot=plot )
+        itemlist.append( item )
+
+    # more cameras from front page
+    if (DEBUG): logger.info("url=" + URL)
+
+    html = _get_html( URL )
     divs = parseDOM( html, 'div', attrs={ 'class': '[^\'"]*?camera_block[^\'"]*?' } )
 
     for _id, div in enumerate(divs):
@@ -232,7 +251,7 @@ def previous_play(item, just_check=False):
                 itemlist.append( new_item )
             return itemlist
         except Exception, e:
-            logger.info("[earthcam] channel.py " + str(e))
+            if (DEBUG): ("[earthcam] channel.py " + str(e))
             return []
     if (DEBUG): logger.info("json_text="+json_text)
     if json_text.startswith('%'):
